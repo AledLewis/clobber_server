@@ -1,0 +1,10 @@
+{
+  "scriptrunner": {
+    "jdbc": "jdbc:oracle:thin:@localhost:1521:xe",
+    "user": "promotemgr",
+    "password": "vagrant",
+    "jarLocation": "/home/aled/workspace/hackday/clobber_server/ScriptRunner.jar",
+    "codeSourcePath": "/home/aled/workspace/hackday/gulp-clobber/example",
+    "project_name": "Super codesource project"
+  }
+}
