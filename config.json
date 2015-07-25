@@ -5,6 +5,7 @@
     "password": "vagrant",
     "jarLocation": "/home/aled/workspace/hackday/clobber_server/ScriptRunner.jar",
     "codeSourcePath": "/home/aled/workspace/hackday/gulp-clobber/example",
-    "project_name": "Super codesource project"
+    "project_name": "Super codesource project",
+    "builder_config_location": "builder.cfg"
   }
 }

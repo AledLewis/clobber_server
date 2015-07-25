@@ -3,9 +3,15 @@ html
     script(src="/socket.io/socket.io.js")
     script(src="http://code.jquery.com/jquery-1.11.1.js")
     script(src="/js/app.js")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")
   body
-    h1!= project
-    ul(id="clobs")
-    p(id="status")
-    button(id="start") start
-    button(id="stop") stop
+    div(class="container" role="main")
+      h1!= project
+      ul(id="clobs" class="list-unstyled" style="height: 400px; overflow: auto;")
+      p
+        button(id="start" class="btn btn-lg btn-success") Start
+        button(id="stop" class="btn btn-lg btn-danger") Stop
+      p(id="status")
+      p(id="status_message")
