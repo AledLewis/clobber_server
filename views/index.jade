@@ -7,9 +7,20 @@ html
     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")
   body
-    div(class="container" role="main")
+
+    div(class="container" role="main" style="height:100%")
       h1!= project
-      ul(id="clobs" class="list-unstyled" style="height: 400px; overflow: auto;")
+      p
+        strong
+          CodeSource Path:
+        span!= codeSource
+      p
+        strong
+          ScriptRunner Location:
+        span!= scriptRunner
+        
+      
+      ul(id="clobs" class="list-unstyled" style="max-height: 50%; overflow: auto;")
       p
         button(id="start" class="btn btn-lg btn-success") Start
         button(id="stop" class="btn btn-lg btn-danger") Stop

@@ -15,8 +15,13 @@ clobber_app.set('view engine', 'jade');
 clobber_app.set( 'views', __dirname +'/views');
 
 clobber_app.get('/', function (req, res){
-  res.render('index', {project:config.scriptrunner.project_name});
+  res.render('index', {
+    "project" : config.scriptrunner.project_name, 
+    "scriptRunner" : config.scriptrunner.jarLocation,
+    "codeSource" : config.scriptrunner.codeSourcePath
 });
+});
+
 
 clobber_app.post('/stop', function(req,res){
   

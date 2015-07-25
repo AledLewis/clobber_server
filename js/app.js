@@ -5,8 +5,6 @@ $(document).ready(function(){
   socket.on('clob', function(msg){
 
    var new_list_item = $("<li></li>");
-   console.log(msg);
-   console.log(msg.result);
    
    var bootstrap_class = msg.result==='success'?'success':'danger';
    var d = new Date();
