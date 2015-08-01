@@ -1,58 +1,55 @@
 var express = require('express');
-var clobber = require('clobber');
+var slobber = require('slobber');
 var fs = require('fs');
 var watch = require('watch');
 var notifier = require('node-notifier');
 
-module.exports.server = function (config_file_location){
+module.exports.server = function (configFileLocation){
 
-var clobber_app = express();
+var slobberApp = express();
 
-clobber_app.use('/js', express.static(__dirname + '/js'));
-clobber_app.use('/css', express.static(__dirname + '/css'));
+slobberApp.use('/js', express.static(__dirname + '/js'));
+slobberApp.use('/css', express.static(__dirname + '/css'));
 
-clobber_app.set('view engine', 'jade');
-clobber_app.set( 'views', __dirname +'/views');
+slobberApp.set('view engine', 'jade');
+slobberApp.set( 'views', __dirname +'/views');
 
-clobber_app.get('/', function (req, res){
+slobberApp.get('/', function (req, res){
   res.render('index', {
-    "project" : config.scriptrunner.project_name, 
+    "project" : config.scriptrunner.projectName, 
     "scriptRunner" : config.scriptrunner.jarLocation,
     "codeSource" : config.scriptrunner.codeSourcePath
-});
+  });
 });
 
 
-clobber_app.post('/stop', function(req,res){
-  
+slobberApp.post('/stop', function(req,res){
   watch.unwatchTree(config.scriptrunner.codeSourcePath);
   console.log('Stopping listening on '+config.scriptrunner.codeSourcePath);
   io.emit('status', 'off');
-  io.emit('status_message', 'Stopping listening on '+config.scriptrunner.codeSourcePath);
+  io.emit('statusMessage', 'Stopping listening on '+config.scriptrunner.codeSourcePath);
   res.send('stop');
 });
 
-clobber_app.post('/start', function(req,res){
+slobberApp.post('/start', function(req,res){
   console.log('Starting listening on '+config.scriptrunner.codeSourcePath);
-  start_clob();
+  startClob();
   res.send('start');
 });
 
-var clobber_server = clobber_app.listen(2562, function() {
-    var host = clobber_server.address().address;
-    var port = clobber_server.address().port;
-    console.log('Clobber server listening at http://%s:%s', host,port);
+//7562 == slob :)
+var slobberServer = slobberApp.listen(7562, function() {
+  var host = slobberServer.address().address;
+  var port = slobberServer.address().port;
+  console.log('slobber server listening at http://%s:%s', host,port);
 });
 
-var io = require('socket.io').listen(clobber_server);
-
-
-
+var io = require('socket.io').listen(slobberServer);
 
 var config;
 try {
-  config = JSON.parse(fs.readFileSync(config_file_location, 'utf8'));
-  } catch (e) {
+  config = JSON.parse(fs.readFileSync(configFileLocation, 'utf8'));
+} catch (e) {
   if (e instanceof SyntaxError) {
     console.log(e);
     process.exit(1)
@@ -66,7 +63,6 @@ io.on('connection', function(socket){
     console.log(msg);
   });
 
-
   socket.on('status', function(msg){
     io.emit('status', 'on')
   });
@@ -77,9 +73,9 @@ io.on('connection', function(socket){
   
 });
 
-var clobber_impl = clobber.get_instance(config);
+var slobberImpl = slobber.getInstance(config);
 
-function start_clob(){
+function startClob(){
   watch.watchTree(config.scriptrunner.codeSourcePath, function(f, curr, prev) {
     
     if (typeof f == "object" && prev === null && curr === null) {
@@ -87,21 +83,21 @@ function start_clob(){
     } else if (curr.nlink === 0) {
       // file deleted
     } else { 
-      clobber_impl(
+      slobberImpl(
         f
-      , function(clob_result){
-          if (clob_result.result === "success"){
-            io.emit('clob', clob_result);
+      , function(clobResult){
+          if (clobResult.result === "success"){
+            io.emit('clob', clobResult);
             notifier.notify({
               'title': 'Successfully Clobbed',
-              'message': clob_result.file_location
+              'message': clobResult.fileLocation
             });
           }
           else {
-            io.emit('clob' ,clob_result);
+            io.emit('clob' ,clobResult);
             notifier.notify({
               'title': 'Clob Failure',
-              'message': clob_result.file_locationh
+              'message': clobResult.fileLocation
             });
           }
       });  
@@ -110,10 +106,9 @@ function start_clob(){
 
   io.emit('status', 'on');
   io.emit('status_message', 'Started listening on '+config.scriptrunner.codeSourcePath);
-  
 
 }
 
-start_clob();
+startClob();
 
 };
