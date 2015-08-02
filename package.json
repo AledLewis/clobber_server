@@ -8,7 +8,7 @@
   },
   "author": "Aled Lewis",
   "license": "MIT",
-  "repository": "https://github.com/AledLewis/slobber_server"
+  "repository": "https://github.com/AledLewis/slobber_server",
   "dependencies": {
     "express": "^4.13.1",
     "jade": "^1.11.0",
