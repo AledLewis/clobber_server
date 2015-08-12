@@ -3,17 +3,15 @@ var slobber = require('slobber');
 var fs = require('fs');
 var watch = require('watch');
 var notifier = require('node-notifier');
+var bodyParser = require('body-parser');
 
 module.exports.server = function (configFileLocation){
 
 var slobberApp = express();
 
-slobberApp.use('/js', express.static(__dirname + '/js'));
-slobberApp.use('/css', express.static(__dirname + '/css'));
+var router = express.Router();
 
-slobberApp.set('view engine', 'jade');
-slobberApp.set( 'views', __dirname +'/views');
-
+//code to be moved to client
 slobberApp.get('/', function (req, res){
   res.render('index', {
     "project" : config.scriptrunner.projectName, 
@@ -21,21 +19,44 @@ slobberApp.get('/', function (req, res){
     "codeSource" : config.scriptrunner.codeSourcePath
   });
 });
+slobberApp.use('/js', express.static(__dirname + '/js'));
+slobberApp.use('/css', express.static(__dirname + '/css'));
+slobberApp.set('view engine', 'jade');
+slobberApp.set( 'views', __dirname +'/views');
+//end code to be moved to client
+router.use(bodyParser.json());
 
+router.route('/clobWatch')
+  .put(function(req,res){
+    console.log('Attempting to start listening on '+config.scriptrunner.codeSourcePath);
+    startClob();    
+    res.send('start');
+  })
+  .delete(function(req,res){
+    console.log('Stopping listening on '+config.scriptrunner.codeSourcePath);
+    stopClob();
+    res.send('stop');
+  })
+  .get(function(req,res){
+    console.log('Received request for status');
+    res.send({
+      "Status":"status"    
+    });
+  });
+  
+router.route('/clobProject')
+  .post (function(req,res){
+    stopClob();
+    loadConfigFile(req.body.projectFilePath);
+    startClob();
+    
+    res.send(config);
+  })
+  .get (function(req,res){
+    res.send(config);
+  });
 
-slobberApp.post('/stop', function(req,res){
-  watch.unwatchTree(config.scriptrunner.codeSourcePath);
-  console.log('Stopping listening on '+config.scriptrunner.codeSourcePath);
-  io.emit('status', 'off');
-  io.emit('statusMessage', 'Stopping listening on '+config.scriptrunner.codeSourcePath);
-  res.send('stop');
-});
-
-slobberApp.post('/start', function(req,res){
-  console.log('Starting listening on '+config.scriptrunner.codeSourcePath);
-  startClob();
-  res.send('start');
-});
+slobberApp.use('/api', router);
 
 //7562 == slob :)
 var slobberServer = slobberApp.listen(7562, function() {
@@ -46,15 +67,21 @@ var slobberServer = slobberApp.listen(7562, function() {
 
 var io = require('socket.io').listen(slobberServer);
 
+
+
 var config;
-try {
-  config = JSON.parse(fs.readFileSync(configFileLocation, 'utf8'));
-} catch (e) {
-  if (e instanceof SyntaxError) {
+
+function loadConfigFile(filename){
+  console.log('Attempting to parse ' + filename + ' as a clobber project');
+  console.log('Success');
+  try {
+    config = JSON.parse(fs.readFileSync(filename, 'utf8'));
+  } catch (e) {
     console.log(e);
-    process.exit(1)
   }
 }
+
+loadConfigFile(configFileLocation);
 
 io.on('connection', function(socket){
   console.log('a user connected');
@@ -70,12 +97,13 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
-  
 });
 
-var slobberImpl = slobber.getInstance(config);
+var slobberImpl;
 
+//TODO move out of here into a model thingy
 function startClob(){
+  slobberImpl = slobber.getInstance(config);
   watch.watchTree(config.scriptrunner.codeSourcePath, function(f, curr, prev) {
     
     if (typeof f == "object" && prev === null && curr === null) {
@@ -103,11 +131,16 @@ function startClob(){
       });  
     }
   });
-
   io.emit('status', 'on');
   io.emit('status_message', 'Started listening on '+config.scriptrunner.codeSourcePath);
-
 }
+
+// TODO move out of here into a model thingy
+function stopClob(){
+  watch.unwatchTree(config.scriptrunner.codeSourcePath);
+  io.emit('status', 'off');
+  io.emit('statusMessage', 'Stopping listening on '+config.scriptrunner.codeSourcePath);
+} 
 
 startClob();
 
