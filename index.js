@@ -1,7 +1,7 @@
 var express = require('express');
 var slobber = require('slobber');
 var fs = require('fs');
-var gaze = require('gaze');
+var Gaze = require('gaze').Gaze;
 var notifier = require('node-notifier');
 var bodyParser = require('body-parser');
 
@@ -75,6 +75,21 @@ router.route('/clobProject')
     res.send(config);
   });
 
+router.route('/clobProject/slobGlobs')
+  .get(function(req,res){
+    
+    res.send(config.slobGlobs);
+  
+  })
+  .post(function(req,res){
+    console.log(config.slobGlobs);
+    console.log(req.body.slobGlob);
+    config.slobGlobs.push(req.body.slobGlob);
+    res.send({"result":"success"});
+    
+  
+  });
+  
 slobberApp.use('/api', router);
 
 //7562 == slob :)
@@ -100,7 +115,6 @@ function loadConfigFile(filename){
   }
 }
 
-loadConfigFile(configFileLocation);
 
 io.on('connection', function(socket){
   console.log('a user connected');
@@ -119,41 +133,43 @@ io.on('connection', function(socket){
 });
 
 var slobberImpl;
+var gaze = new Gaze();
 
 //TODO move out of here into a model thingy
 
 function startClob(){
   slobberImpl = slobber.getInstance(config);
   
-  gaze(config.scriptrunner.codeSourcePath+'/**',function(err,watcher){
-    this.on('changed', function(filePath){
-      slobberImpl(
-        filePath
-      , handleResponse
-      );
-    
-    });
-    
-    this.on('added', function(filePath){
-      slobberImpl(
-        filePath
-      , handleResponse
-      );
-    
-    });
+  gaze.on('changed', function(filePath){
+    slobberImpl(
+      filePath
+    , handleResponse
+    );
   
-  }); 
+  });
+  
+  gaze.on('added', function(filePath){
+    slobberImpl(
+      filePath
+    , handleResponse
+    );
+  
+  });
+  console.log("Current globs to listen on are "+config.slobGlobs);
+  gaze.add(config.slobGlobs.map(function(path){return config.scriptrunner.codeSourcePath+"/"+path}));
+  
   io.emit('status', 'on');
   io.emit('status_message', 'Started listening on '+config.scriptrunner.codeSourcePath);
 }
 
 // TODO move out of here into a model thingy
 function stopClob(){
-  gaze.close();
+  gazeWatcher.close();
   io.emit('status', 'off');
   io.emit('statusMessage', 'Stopping listening on '+config.scriptrunner.codeSourcePath);
 } 
 
+loadConfigFile(configFileLocation);
 startClob();
 
 };
