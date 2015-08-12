@@ -10,6 +10,7 @@
   "license": "MIT",
   "repository": "https://github.com/AledLewis/slobber_server",
   "dependencies": {
+    "body-parser": "^1.13.3",
     "express": "^4.13.1",
     "jade": "^1.11.0",
     "node-notifier": "^4.2.3",
