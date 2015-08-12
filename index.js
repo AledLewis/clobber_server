@@ -1,7 +1,7 @@
 var express = require('express');
 var slobber = require('slobber');
 var fs = require('fs');
-var watch = require('watch');
+var gaze = require('gaze');
 var notifier = require('node-notifier');
 var bodyParser = require('body-parser');
 
@@ -102,17 +102,14 @@ io.on('connection', function(socket){
 var slobberImpl;
 
 //TODO move out of here into a model thingy
+
 function startClob(){
   slobberImpl = slobber.getInstance(config);
-  watch.watchTree(config.scriptrunner.codeSourcePath, function(f, curr, prev) {
-    
-    if (typeof f == "object" && prev === null && curr === null) {
-      // Finished walking the tree
-    } else if (curr.nlink === 0) {
-      // file deleted
-    } else { 
+  
+  gaze(config.scriptrunner.codeSourcePath+'/**',function(err,watcher){
+    this.on('changed', function(filePath){
       slobberImpl(
-        f
+        filePath
       , function(clobResult){
           if (clobResult.result === "success"){
             io.emit('clob', clobResult);
@@ -128,16 +125,40 @@ function startClob(){
               'message': clobResult.fileLocation
             });
           }
-      });  
-    }
-  });
+      });
+    
+    });
+    
+    this.on('added', function(filePath){
+      slobberImpl(
+        filePath
+      , function(clobResult){
+          if (clobResult.result === "success"){
+            io.emit('clob', clobResult);
+            notifier.notify({
+              'title': 'Successfully Clobbed',
+              'message': clobResult.fileLocation
+            });
+          }
+          else {
+            io.emit('clob' ,clobResult);
+            notifier.notify({
+              'title': 'Clob Failure',
+              'message': clobResult.fileLocation
+            });
+          }
+      });
+    
+    });
+  
+  }); 
   io.emit('status', 'on');
   io.emit('status_message', 'Started listening on '+config.scriptrunner.codeSourcePath);
 }
 
 // TODO move out of here into a model thingy
 function stopClob(){
-  watch.unwatchTree(config.scriptrunner.codeSourcePath);
+  gaze.close();
   io.emit('status', 'off');
   io.emit('statusMessage', 'Stopping listening on '+config.scriptrunner.codeSourcePath);
 } 
