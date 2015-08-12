@@ -23,6 +23,25 @@ slobberApp.use('/js', express.static(__dirname + '/js'));
 slobberApp.use('/css', express.static(__dirname + '/css'));
 slobberApp.set('view engine', 'jade');
 slobberApp.set( 'views', __dirname +'/views');
+
+function handleResponse(slobberResponse){
+  if (slobberResponse.result === "success"){
+    console.log('Clob success');
+    io.emit('clob', slobberResponse);
+    notifier.notify({
+      'title': 'Slobber',
+      'message': "Successfully clobbed"
+    });
+  }
+  else {
+    console.log('Clob failure');
+    io.emit('clob' ,slobberResponse);
+    notifier.notify({
+      'title': 'Clobber',
+      'message': "Failed to clob"
+    });
+  }
+}
 //end code to be moved to client
 router.use(bodyParser.json());
 
@@ -110,44 +129,16 @@ function startClob(){
     this.on('changed', function(filePath){
       slobberImpl(
         filePath
-      , function(clobResult){
-          if (clobResult.result === "success"){
-            io.emit('clob', clobResult);
-            notifier.notify({
-              'title': 'Successfully Clobbed',
-              'message': clobResult.fileLocation
-            });
-          }
-          else {
-            io.emit('clob' ,clobResult);
-            notifier.notify({
-              'title': 'Clob Failure',
-              'message': clobResult.fileLocation
-            });
-          }
-      });
+      , handleResponse
+      );
     
     });
     
     this.on('added', function(filePath){
       slobberImpl(
         filePath
-      , function(clobResult){
-          if (clobResult.result === "success"){
-            io.emit('clob', clobResult);
-            notifier.notify({
-              'title': 'Successfully Clobbed',
-              'message': clobResult.fileLocation
-            });
-          }
-          else {
-            io.emit('clob' ,clobResult);
-            notifier.notify({
-              'title': 'Clob Failure',
-              'message': clobResult.fileLocation
-            });
-          }
-      });
+      , handleResponse
+      );
     
     });
   
