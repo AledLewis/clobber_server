@@ -4,12 +4,14 @@
   "description": "A server to manage slobbing ",
   "main": "index.js",
   "scripts": {
+    "start": "node ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Aled Lewis",
   "license": "MIT",
   "repository": "https://github.com/AledLewis/slobber_server",
   "dependencies": {
+    "app-module-path": "^1.0.3",
     "body-parser": "^1.13.3",
     "express": "^4.13.1",
     "gaze": "^0.5.1",
