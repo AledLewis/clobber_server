@@ -107,12 +107,16 @@ var config;
 
 function loadConfigFile(filename){
   console.log('Attempting to parse ' + filename + ' as a clobber project');
-  console.log('Success');
+  
   try {
     config = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    console.log('Success');
+    
   } catch (e) {
     console.log(e);
+    process.exit(1);
   }
+  
 }
 
 
@@ -133,7 +137,7 @@ io.on('connection', function(socket){
 });
 
 var slobberImpl;
-var gaze = new Gaze();
+var gaze = new Gaze('',{interval:500});
 
 //TODO move out of here into a model thingy
 
@@ -155,8 +159,16 @@ function startClob(){
     );
   
   });
-  console.log("Current globs to listen on are "+config.slobGlobs);
+  
+  console.log("Watching on these globs"+ config.slobGlobs);
   gaze.add(config.slobGlobs.map(function(path){return config.scriptrunner.codeSourcePath+"/"+path}));
+  var watching = gaze.watched();
+  var fileCount = 0;
+  for (glob in watching){
+    fileCount += watching[glob].length;
+  }
+  console.log(fileCount+" files");
+  
   
   io.emit('status', 'on');
   io.emit('status_message', 'Started listening on '+config.scriptrunner.codeSourcePath);
