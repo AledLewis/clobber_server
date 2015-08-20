@@ -1,8 +1,9 @@
 require('app-module-path').addPath(__dirname + '/app');
 var express = require('express');
 var bodyParser = require('body-parser');
-var clobProjectController = require('controllers/clobProjects');
 var clobWatchController = require('controllers/clobWatch');
+var clobProjectController = require('controllers/clobProjects');
+
 var slobberApp = express();
 var router = express.Router();
 

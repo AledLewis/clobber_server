@@ -4,9 +4,9 @@ var currentConfig;
 var slobberImpl;
 var gaze = new Gaze();
 var notifier = require('node-notifier');
+var path = require('path');
 
 var clobbing = true;
-var configSet = false;
 
 function stopClob(){
   if (clobbing) {
@@ -36,40 +36,38 @@ function handleResponse(slobberResponse){
 }
 
 function startClob(){
-   console.log('Attempting to start listening on '+currentConfig.scriptrunner.codeSourcePath);
   
-  gaze.on('changed', function(filePath){
-    slobberImpl(
-      filePath
-    , handleResponse
-    );  
-  });
-  
-  gaze.on('added', function(filePath){
-    slobberImpl(
-      filePath
-    , handleResponse
-    );
-  });
-  
+  console.log('Attempting to start listening on '+currentConfig.scriptrunner.codeSourcePath);
   console.log("Current globs to listen on are "+currentConfig.slobGlobs);
+  var gaze = new Gaze([], {"cwd":currentConfig.scriptrunner.codeSourcePath});
   
-  gaze.add(currentConfig.slobGlobs.map(function(path){return currentConfig.scriptrunner.codeSourcePath+"/"+path}));
+  gaze.add(currentConfig.slobGlobs, function(){
+    this.on('changed', function(filePath){
+      slobberImpl(
+        filePath
+      , handleResponse
+      );  
+    });
+    
+    this.on('added', function(filePath){
+      slobberImpl(
+        filePath
+      , handleResponse
+      );
+    });
   
+  });
+
   clobbing = true;
 }
 
 exports.setConfig = function(config){
   currentConfig = config;
   slobberImpl = slobber.getInstance(currentConfig);
-  configSet = true;
 }
 
 exports.clobbing = function(){
   return clobbing;
-}
-exports.configSet = function(){
-  return configSet;
 }
 
 exports.stopClob = stopClob;

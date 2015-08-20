@@ -17,13 +17,11 @@ exports.status= function(req,res){
 
 require('models/clobProject').changeListeners.push(
   function(projectConfig){
+  
+    clobWatch.setConfig(projectConfig);
     if(clobWatch.clobbing()){
-      clobWatch.setConfig(projectConfig);
       clobWatch.stopClob();
       clobWatch.startClob();
-    }
-    else{
-      clobWatch.setConfig(projectConfig);
     }
     
   }
