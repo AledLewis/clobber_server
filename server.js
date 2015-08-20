@@ -1,6 +1,5 @@
 require('app-module-path').addPath(__dirname + '/app');
 var express = require('express');
-var fs = require('fs');
 var bodyParser = require('body-parser');
 var clobProjectController = require('controllers/clobProjects');
 var clobWatchController = require('controllers/clobWatch');
@@ -8,13 +7,13 @@ var slobberApp = express();
 var router = express.Router();
 
 //code to be moved to client
-slobberApp.get('/', function (req, res){
-  res.render('index', {
-    "project" : config.scriptrunner.projectName, 
-    "scriptRunner" : config.scriptrunner.jarLocation,
-    "codeSource" : config.scriptrunner.codeSourcePath
-  });
-});
+// slobberApp.get('/', function (req, res){
+  // res.render('index', {
+    // "project" : config.scriptrunner.projectName, 
+    // "scriptRunner" : config.scriptrunner.jarLocation,
+    // "codeSource" : config.scriptrunner.codeSourcePath
+  // });
+// });
 slobberApp.use('/js', express.static(__dirname + '/js'));
 slobberApp.use('/css', express.static(__dirname + '/css'));
 slobberApp.set('view engine', 'jade');
@@ -24,32 +23,16 @@ slobberApp.set( 'views', __dirname +'/views');
 router.use(bodyParser.json());
 
 router.route('/clobWatch')
-  .put(clobWatchController.startClob)
-  .delete(clobWatchController.stopClob)
-  .get(clobWatchController.status);
+  .put(clobWatchController.startClobReq)
+  .delete(clobWatchController.stopClobReq);
   
 router.route('/clobProject')
-  .post (function(req,res){
-    stopClob();
-    loadConfigFile(req.body.projectFilePath);
-    startClob();
-    
-    res.send(config);
-  })
-  .get (function(req,res){
-    res.send(config);
-  });
+  .post (clobProjectController.setProjectReq)
+  .get (clobProjectController.getProjectReq);
 
 router.route('/clobProject/slobGlobs')
-  .get(function(req,res){
-    res.send(config.slobGlobs);
-  })
-  .post(function(req,res){
-    console.log(config.slobGlobs);
-    console.log(req.body.slobGlob);
-    config.slobGlobs.push(req.body.slobGlob);
-    res.send({"result":"success"});  
-  });
+  .get(clobProjectController.getSlobGlobsReq)
+  .post(clobProjectController.addSlobGlobReq);
   
 slobberApp.use('/api', router);
 
@@ -61,17 +44,6 @@ var slobberServer = slobberApp.listen(7562, function() {
 });
 
 var io = require('socket.io').listen(slobberServer);
-
-function loadConfigFile(filename){
-  console.log('Attempting to parse ' + filename + ' as a clobber project');
-  console.log('Success');
-  try {
-    return JSON.parse(fs.readFileSync(filename, 'utf8'));
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 
 io.on('connection', function(socket){
   console.log('a user connected');
@@ -89,6 +61,13 @@ io.on('connection', function(socket){
   });
 });
 
-var slobberImpl;
+// This probably shouldn't go here
+clobProjectController.changeListeners.push(
+  function(projectConfig){
+    clobWatchController.stopClob();
+    clobWatchController.setConfig(projectConfig);
+    clobWatchController.startClob();
+  }
+);
 
-clobWatchController.setConfig(loadConfigFile('./config.json'));
+clobProjectController.setProject('./config.json');
