@@ -61,13 +61,4 @@ io.on('connection', function(socket){
   });
 });
 
-// This probably shouldn't go here
-clobProjectController.changeListeners.push(
-  function(projectConfig){
-    clobWatchController.stopClob();
-    clobWatchController.setConfig(projectConfig);
-    clobWatchController.startClob();
-  }
-);
-
-clobProjectController.setProject('./config.json');
+require('models/clobProject').setProject('config.json');
