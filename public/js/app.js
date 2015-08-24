@@ -1,3 +1,18 @@
+function loadSlobGlobs(){
+  $.ajax({
+    method:"GET", 
+    url:"/api/clobProject/slobGlobs",
+    success: function(slobGlobs){
+      
+      var $globs = $('#globs');
+      $globs.empty();
+      slobGlobs.forEach(function(glob) {
+        $globs.append($('<li/>').text(glob));
+      });
+    }
+  });
+}
+
 $(document).ready(function(){
 
   var socket = io();
@@ -60,17 +75,43 @@ $(document).ready(function(){
 
   $('#stop').click(function(){
     $.ajax({
-      method:"POST",
-      url:"/stop"
+      method:"DELETE",
+      url:"/api/clobWatch"
     });
     return false;
   });
 
   $('#start').click(function(){
     $.ajax({
-      method:"POST",
-      url:"/start"
+      method:"PUT",
+      url:"/api/clobWatch"
     });
     return false;
   });
+  
+  $('#addGlob').click(function(){
+    
+    var globToAdd = $('#globToAdd').val();
+    
+    $.ajax({
+      method:"POST", 
+      contentType: "application/json",
+      processData :false,
+      url:"/api/clobProject/slobGlobs",
+      data:JSON.stringify({slobGlob:globToAdd}),
+      success: loadSlobGlobs
+    });
+  });
+  
+  $.ajax({
+    method:"GET", 
+    url:"/api/clobProject",
+    success: function(projectData){
+      $('#projectName').text(projectData.projectName);
+      $('#codeSourcePath').text(projectData.scriptrunner.codeSourcePath);
+      $('#scriptRunnerLocation').text(projectData.scriptrunner.jarLocation);
+    }
+  });
+  
+  loadSlobGlobs();
 });

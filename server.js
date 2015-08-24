@@ -7,18 +7,14 @@ var clobProjectController = require('controllers/clobProjects');
 var slobberApp = express();
 var router = express.Router();
 
-//code to be moved to client
-// slobberApp.get('/', function (req, res){
-  // res.render('index', {
-    // "project" : config.scriptrunner.projectName, 
-    // "scriptRunner" : config.scriptrunner.jarLocation,
-    // "codeSource" : config.scriptrunner.codeSourcePath
-  // });
-// });
-slobberApp.use('/js', express.static(__dirname + '/js'));
-slobberApp.use('/css', express.static(__dirname + '/css'));
+
+slobberApp.get('/', function (req, res){
+  res.render('index');
+});
+slobberApp.use('/js', express.static(__dirname + '/public/js'));
+slobberApp.use('/css', express.static(__dirname + '/public/css'));
 slobberApp.set('view engine', 'jade');
-slobberApp.set( 'views', __dirname +'/views');
+slobberApp.set( 'views', __dirname +'/public');
 
 //end code to be moved to client
 router.use(bodyParser.json());
