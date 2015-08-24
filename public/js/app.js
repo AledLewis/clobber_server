@@ -29,32 +29,17 @@ $(document).ready(function(){
      .append( 
        $('<div>', {"class":"panel-heading"})
        .append(
-         $('<div>', {"class":"panel-title"}).text(msg.result+" "+d.toLocaleString())
+         $('<div>', {"class":"panel-title"}).text(msg.clobFile)
        )
      ).append(
        $('<div>', {"class":"panel-body"}).append($('<strong>').text(msg.file_location))
-       .append(
        
-         $('<div>', {"class":"hide"})
-         .append(
-           $('<p>').text(msg.build_output)
-         )
-         .append(
-           $('<p>').text(msg.run_output)
-         )
-         .append(
-           msg.err?$('<p>').text(JSON.stringify(msg.err)):"" 
-         )
-         .append(
-           msg.err_out?$('<p>').text(msg.err_out):"" 
-           
-         )
+       .append(
+         $('<p/>').text(d.toLocaleString())
        )
        .append(
-         $('<a>', {"style":"display:block"}).text('Show/hide details').click(function(ev) {
-           var parent = $(this).parent().find("div").toggleClass("hide");
-         })
-       )
+          msg.err?$('<p>').text(JSON.stringify(msg.err)):"" 
+       )   
      )
    );
 

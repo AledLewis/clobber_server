@@ -5,8 +5,12 @@ var slobberImpl;
 var gaze = new Gaze();
 var notifier = require('node-notifier');
 var path = require('path');
-
+var io;
 var clobbing = true;
+
+exports.setIO = function(newIO){
+  io = newIO;
+}
 
 function stopClob(){
   if (clobbing) {
@@ -22,17 +26,18 @@ function handleResponse(slobberResponse){
   if (slobberResponse.result === "success"){
     console.log('Clob success');
     notifier.notify({
-      'title': 'Slobber',
-      'message': "Successfully clobbed"
+      'title': 'Success',
+      'message': slobberResponse.clobFile
     });
   }
   else {
     console.log('Clob failure');
     notifier.notify({
-      'title': 'Clobber',
-      'message': "Failed to clob"
+      'title': 'Failure',
+      'message': slobberResponse.clobFile
     });
   }
+  io.emit('clob', slobberResponse);
 }
 
 function startClob(){

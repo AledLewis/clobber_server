@@ -3,7 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var clobWatchController = require('controllers/clobWatch');
 var clobProjectController = require('controllers/clobProjects');
-
+var fs = require('fs');
 var slobberApp = express();
 var router = express.Router();
 
@@ -58,4 +58,11 @@ io.on('connection', function(socket){
   });
 });
 
-require('models/clobProject').setProject('config.json');
+//TODO work out what to do with this
+var project = require('models/clobProject');
+project.setProject('config.json');
+require('models/clobWatch').setIO(io);
+//TODO additionally, make this not stupid
+project.changeListeners.push(function(){
+  fs.writeFile('config.json', JSON.stringify(project.projectConfig()), function(){"Saved config"});
+});
