@@ -1,4 +1,4 @@
-var clobWatch = require('models/clobWatch');
+var clobWatch = rootRequire('app/models/clobWatch');
 
 exports.startClobReq = function(req, res){
 
@@ -15,7 +15,7 @@ exports.status= function(req,res){
   res.send('status');
 }
 
-require('models/clobProject').changeListeners.push(
+rootRequire('app/models/clobProject').changeListeners.push(
   function(projectConfig){
   
     clobWatch.setConfig(projectConfig);

@@ -1,11 +1,15 @@
-require('app-module-path').addPath(__dirname + '/app');
+global.rootRequire = function(name) {
+    return require(__dirname + '/' + name);
+}
+
 var express = require('express');
 var bodyParser = require('body-parser');
-var clobWatchController = require('controllers/clobWatch');
-var clobProjectController = require('controllers/clobProjects');
+var clobWatchController = rootRequire('app/controllers/clobWatch');
+var clobProjectController = rootRequire('app/controllers/clobProjects');
 var fs = require('fs');
 var slobberApp = express();
 var router = express.Router();
+
 
 
 slobberApp.get('/', function (req, res){
@@ -59,9 +63,9 @@ io.on('connection', function(socket){
 });
 
 //TODO work out what to do with this
-var project = require('models/clobProject');
+var project = rootRequire('app/models/clobProject');
 project.setProject('config.json');
-require('models/clobWatch').setIO(io);
+rootRequire('app/models/clobWatch').setIO(io);
 //TODO additionally, make this not stupid
 project.changeListeners.push(function(){
   fs.writeFile('config.json', JSON.stringify(project.projectConfig()), function(){"Saved config"});

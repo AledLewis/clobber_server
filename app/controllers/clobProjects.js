@@ -1,4 +1,4 @@
-var clobProject = require('models/clobProject');
+var clobProject = rootRequire('app/models/clobProject');
 
 exports.setProjectReq = function(req,res){
   clobProject.setProject(req.body.projectFilePath);
