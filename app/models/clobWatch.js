@@ -43,7 +43,7 @@ function handleResponse(slobberResponse){
 
 function doClob(filePath){
   
-  if (fs.statSync(filePath).mode & 2 > 0) {
+  if ((fs.statSync(filePath).mode & 2) > 0) {
     slobberImpl(filePath, handleResponse);            
   }
   else{
