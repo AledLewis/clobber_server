@@ -6,6 +6,7 @@ var gaze = new Gaze();
 var notifier = require('node-notifier');
 var path = require('path');
 var io;
+var fs = require('fs');
 var clobbing = true;
 
 exports.setIO = function(newIO){
@@ -40,6 +41,20 @@ function handleResponse(slobberResponse){
   io.emit('clob', slobberResponse);
 }
 
+function doClob(filePath){
+  
+  if (fs.statSync(filePath).mode & 2 > 0) {
+    slobberImpl(filePath, handleResponse);            
+  }
+  else{
+    notifier.notify({
+      'title': 'Failure',
+      'message': filePath|| ' is read-only'
+    });
+    io.emit('clob', {"status":"failure", "clobFile":filePath,"err":"File is read-only"});
+  }
+}
+
 function startClob(){
   
   console.log('Attempting to start listening on '+currentConfig.scriptrunner.codeSourcePath);
@@ -48,17 +63,11 @@ function startClob(){
   
   gaze.add(currentConfig.slobGlobs, function(){
     this.on('changed', function(filePath){
-      slobberImpl(
-        filePath
-      , handleResponse
-      );  
+       doClob(filePath);
     });
     
     this.on('added', function(filePath){
-      slobberImpl(
-        filePath
-      , handleResponse
-      );
+      doClob(filePath);
     });
   
   });
