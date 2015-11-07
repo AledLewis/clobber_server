@@ -7,10 +7,35 @@ function loadSlobGlobs(){
       var $globs = $('#globs');
       $globs.empty();
       slobGlobs.forEach(function(glob) {
-        $globs.append($('<li/>').text(glob));
+        var glob_span = $('<span/>').text(glob)
+        var remove_a = 
+          $('<a>', {"href":"#", "title":"Remove Glob", "style":"color: inherit ; margin-left: 5px;"})
+            .append($('<span/>', {"class":"remove-glob glyphicon glyphicon-trash"}))
+            .click(removeGlobEventHandler);
+
+        $globs.append($('<li/>')
+          .append(glob_span)
+          .append(remove_a)
+        );
       });
     }
   });
+}
+
+function removeGlobEventHandler(event){
+  if(confirm('Are you sure you want to remove this Glob?')) {
+
+    var glob_to_remove = $(event.target).parent().prev("span").text();
+
+    $.ajax({
+        method:"POST", 
+        contentType: "application/json",
+        processData :false,
+        url:"/api/clobProject/slobGlobs/remove",
+        data:JSON.stringify({slobGlob:glob_to_remove}),
+        success: loadSlobGlobs
+    });
+  }
 }
 
 $(document).ready(function(){

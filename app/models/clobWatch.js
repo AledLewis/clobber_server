@@ -59,7 +59,7 @@ function startClob(){
   
   console.log('Attempting to start listening on '+currentConfig.scriptrunner.codeSourcePath);
   console.log("Current globs to listen on are "+currentConfig.slobGlobs);
-  var gaze = new Gaze([], {"cwd":currentConfig.scriptrunner.codeSourcePath, "interval": 500});
+  gaze = new Gaze([], {"cwd":currentConfig.scriptrunner.codeSourcePath, "interval": 500});
   
   gaze.add(currentConfig.slobGlobs, function(){
     this.on('changed', function(filePath){

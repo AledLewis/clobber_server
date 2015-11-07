@@ -33,3 +33,11 @@ exports.addSlobGlob = function(slobGlob){
   projectConfig.slobGlobs.push(slobGlob);
   changeCallbacks();
 }
+
+exports.removeSlobGlob = function(slobGlob){
+  var glob_index = projectConfig.slobGlobs.indexOf(slobGlob);
+  if(glob_index != -1){
+    projectConfig.slobGlobs.splice(glob_index, 1);  
+    changeCallbacks();
+  }
+}

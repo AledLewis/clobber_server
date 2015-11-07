@@ -19,3 +19,7 @@ exports.addSlobGlobReq = function(req,res){
   res.send({"result":"success"});
 }
 
+exports.removeSlobGlobReq = function(req,res){
+  clobProject.removeSlobGlob(req.body.slobGlob)
+  res.send({"result":"success"});
+}
