@@ -38,6 +38,23 @@ function removeGlobEventHandler(event){
   }
 }
 
+function addGlobEventHandler(event){
+
+    var globToAdd = $('#globToAdd').val();
+
+    $.ajax({
+      method:"POST", 
+      contentType: "application/json",
+      processData :false,
+      url:"/api/clobProject/slobGlobs",
+      data:JSON.stringify({slobGlob:globToAdd}),
+      success: function(data){
+        $("#globToAdd").val('');
+        loadSlobGlobs();
+      }
+    });
+}
+
 $(document).ready(function(){
 
   var socket = io();
@@ -99,18 +116,13 @@ $(document).ready(function(){
     return false;
   });
   
-  $('#addGlob').click(function(){
-    
-    var globToAdd = $('#globToAdd').val();
-    
-    $.ajax({
-      method:"POST", 
-      contentType: "application/json",
-      processData :false,
-      url:"/api/clobProject/slobGlobs",
-      data:JSON.stringify({slobGlob:globToAdd}),
-      success: loadSlobGlobs
-    });
+  $('#addGlob').click(addGlobEventHandler);
+
+  $('#globToAdd').keypress(function(event){
+    if (event.which == 13){
+      event.preventDefault();
+      addGlobEventHandler(event);
+    }
   });
   
   $.ajax({
