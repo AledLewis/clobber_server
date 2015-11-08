@@ -31,6 +31,7 @@ exports.projectConfig = function(){
 
 exports.addSlobGlob = function(slobGlob){
   projectConfig.slobGlobs.push(slobGlob);
+  projectConfig.slobGlobs.sort();
   changeCallbacks();
 }
 
