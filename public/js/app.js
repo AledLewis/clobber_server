@@ -7,10 +7,52 @@ function loadSlobGlobs(){
       var $globs = $('#globs');
       $globs.empty();
       slobGlobs.forEach(function(glob) {
-        $globs.append($('<li/>').text(glob));
+        var glob_span = $('<span/>').text(glob)
+        var remove_a = 
+          $('<a>', {"href":"#", "title":"Remove Glob", "style":"color: inherit ; margin-left: 5px;"})
+            .append($('<span/>', {"class":"remove-glob glyphicon glyphicon-trash"}))
+            .click(removeGlobEventHandler);
+
+        $globs.append($('<li/>')
+          .append(glob_span)
+          .append(remove_a)
+        );
       });
     }
   });
+}
+
+function removeGlobEventHandler(event){
+  if(confirm('Are you sure you want to remove this Glob?')) {
+
+    var glob_to_remove = $(event.target).parent().prev("span").text();
+
+    $.ajax({
+        method:"POST", 
+        contentType: "application/json",
+        processData :false,
+        url:"/api/clobProject/slobGlobs/remove",
+        data:JSON.stringify({slobGlob:glob_to_remove}),
+        success: loadSlobGlobs
+    });
+  }
+}
+
+function addGlobEventHandler(event){
+
+    var globToAdd = $('#globToAdd').val();
+
+    $.ajax({
+      method:"POST", 
+      contentType: "application/json",
+      processData :false,
+      url:"/api/clobProject/slobGlobs",
+      data:JSON.stringify({slobGlob:globToAdd}),
+      success: function(data){
+        $("#globToAdd").val('');
+        loadSlobGlobs();
+      }
+    });
 }
 
 $(document).ready(function(){
@@ -74,18 +116,13 @@ $(document).ready(function(){
     return false;
   });
   
-  $('#addGlob').click(function(){
-    
-    var globToAdd = $('#globToAdd').val();
-    
-    $.ajax({
-      method:"POST", 
-      contentType: "application/json",
-      processData :false,
-      url:"/api/clobProject/slobGlobs",
-      data:JSON.stringify({slobGlob:globToAdd}),
-      success: loadSlobGlobs
-    });
+  $('#addGlob').click(addGlobEventHandler);
+
+  $('#globToAdd').keypress(function(event){
+    if (event.which == 13){
+      event.preventDefault();
+      addGlobEventHandler(event);
+    }
   });
   
   $.ajax({

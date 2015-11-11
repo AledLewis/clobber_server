@@ -34,6 +34,9 @@ router.route('/clobProject')
 router.route('/clobProject/slobGlobs')
   .get(clobProjectController.getSlobGlobsReq)
   .post(clobProjectController.addSlobGlobReq);
+
+router.route('/clobProject/slobGlobs/remove')
+  .post(clobProjectController.removeSlobGlobReq);
   
 slobberApp.use('/api', router);
 

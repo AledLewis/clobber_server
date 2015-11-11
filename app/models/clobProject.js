@@ -30,6 +30,20 @@ exports.projectConfig = function(){
 }
 
 exports.addSlobGlob = function(slobGlob){
-  projectConfig.slobGlobs.push(slobGlob);
-  changeCallbacks();
+  var glob_index = projectConfig.slobGlobs.indexOf(slobGlob);
+  if(glob_index == -1){
+    projectConfig.slobGlobs.push(slobGlob);
+    projectConfig.slobGlobs.sort();
+    changeCallbacks();
+  } else {
+    console.log("Glob \"" + slobGlob + "\" already exists");
+  }
+}
+
+exports.removeSlobGlob = function(slobGlob){
+  var glob_index = projectConfig.slobGlobs.indexOf(slobGlob);
+  if(glob_index != -1){
+    projectConfig.slobGlobs.splice(glob_index, 1);  
+    changeCallbacks();
+  }
 }

@@ -1,3 +1,4 @@
 node_modules/
 run_test.js
 config*.json
+*.jar
