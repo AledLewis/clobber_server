@@ -1,0 +1,102 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\iojs\\node.exe',
+1 verbose cli   'C:\\Program Files\\iojs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'publish' ]
+2 info using npm@2.13.0
+3 info using node@v2.4.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec { raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: 'C:\\Users\\alewis\\workspace\\slobber_server',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory C:\Users\alewis\AppData\Roaming\npm-cache\slobber-server\0.0.9\package.tgz not in flight; packing
+9 verbose tar pack [ 'C:\\Users\\alewis\\AppData\\Roaming\\npm-cache\\slobber-server\\0.0.9\\package.tgz',
+9 verbose tar pack   'C:\\Users\\alewis\\workspace\\slobber_server' ]
+10 verbose tarball C:\Users\alewis\AppData\Roaming\npm-cache\slobber-server\0.0.9\package.tgz
+11 verbose folder C:\Users\alewis\workspace\slobber_server
+12 info prepublish slobber-server@0.0.9
+13 verbose addLocalTarball adding from inside cache C:\Users\alewis\AppData\Roaming\npm-cache\slobber-server\0.0.9\package.tgz
+14 silly cache afterAdd slobber-server@0.0.9
+15 verbose afterAdd C:\Users\alewis\AppData\Roaming\npm-cache\slobber-server\0.0.9\package\package.json not in flight; writing
+16 verbose afterAdd C:\Users\alewis\AppData\Roaming\npm-cache\slobber-server\0.0.9\package\package.json written
+17 silly publish { name: 'slobber-server',
+17 silly publish   version: '0.0.9',
+17 silly publish   description: 'A server to manage slobbing ',
+17 silly publish   main: 'index.js',
+17 silly publish   scripts:
+17 silly publish    { start: 'node ./index.js',
+17 silly publish      test: 'echo "Error: no test specified" && exit 1' },
+17 silly publish   author: { name: 'Aled Lewis' },
+17 silly publish   license: 'MIT',
+17 silly publish   repository:
+17 silly publish    { type: 'git',
+17 silly publish      url: 'git+https://github.com/AledLewis/slobber_server.git' },
+17 silly publish   dependencies:
+17 silly publish    { 'body-parser': '^1.13.3',
+17 silly publish      express: '^4.13.1',
+17 silly publish      gaze: '^0.5.1',
+17 silly publish      jade: '^1.11.0',
+17 silly publish      'node-notifier': '^4.2.3',
+17 silly publish      slobber: '0.2.0',
+17 silly publish      'socket.io': '^1.3.6' },
+17 silly publish   gitHead: 'ac02842f0e471879b2de32a747fac09b4e17da2a',
+17 silly publish   bugs: { url: 'https://github.com/AledLewis/slobber_server/issues' },
+17 silly publish   readme: 'ERROR: No README data found!',
+17 silly publish   homepage: 'https://github.com/AledLewis/slobber_server#readme',
+17 silly publish   _id: 'slobber-server@0.0.9',
+17 silly publish   _shasum: '30463de3a45355b7d272831daeb36a1d57f1e444',
+17 silly publish   _from: '.' }
+18 verbose getPublishConfig undefined
+19 silly mapToRegistry name slobber-server
+20 silly mapToRegistry using default registry
+21 silly mapToRegistry registry https://registry.npmjs.org/
+22 silly mapToRegistry uri https://registry.npmjs.org/slobber-server
+23 verbose publish registryBase https://registry.npmjs.org/
+24 silly publish uploading C:\Users\alewis\AppData\Roaming\npm-cache\slobber-server\0.0.9\package.tgz
+25 verbose request uri https://registry.npmjs.org/slobber-server
+26 verbose request sending authorization for write operation
+27 info attempt registry request try #1 at 19:09:29
+28 verbose request using bearer token for auth
+29 verbose request id 5f2a835cb1bf4ca9
+30 http request PUT https://registry.npmjs.org/slobber-server
+31 http 403 https://registry.npmjs.org/slobber-server
+32 verbose headers { 'content-type': 'application/json',
+32 verbose headers   'cache-control': 'max-age=60',
+32 verbose headers   'content-length': '95',
+32 verbose headers   'accept-ranges': 'bytes',
+32 verbose headers   date: 'Wed, 09 Dec 2015 19:09:30 GMT',
+32 verbose headers   via: '1.1 varnish',
+32 verbose headers   connection: 'keep-alive',
+32 verbose headers   'x-served-by': 'cache-lcy1122-LCY',
+32 verbose headers   'x-cache': 'MISS',
+32 verbose headers   'x-cache-hits': '0',
+32 verbose headers   'x-timer': 'S1449688169.148991,VS0,VE1283' }
+33 verbose request invalidating C:\Users\alewis\AppData\Roaming\npm-cache\registry.npmjs.org\slobber-server on PUT
+34 error publish Failed PUT 403
+35 verbose stack Error: "You cannot publish over the previously published version 0.0.9." : slobber-server
+35 verbose stack     at CachingRegistryClient.<anonymous> (C:\Program Files\iojs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:247:14)
+35 verbose stack     at Request._callback (C:\Program Files\iojs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:170:14)
+35 verbose stack     at Request.self.callback (C:\Program Files\iojs\node_modules\npm\node_modules\request\request.js:197:22)
+35 verbose stack     at emitTwo (events.js:87:13)
+35 verbose stack     at Request.emit (events.js:172:7)
+35 verbose stack     at Request.<anonymous> (C:\Program Files\iojs\node_modules\npm\node_modules\request\request.js:1050:14)
+35 verbose stack     at emitOne (events.js:82:20)
+35 verbose stack     at Request.emit (events.js:169:7)
+35 verbose stack     at IncomingMessage.<anonymous> (C:\Program Files\iojs\node_modules\npm\node_modules\request\request.js:996:12)
+35 verbose stack     at emitNone (events.js:72:20)
+36 verbose statusCode 403
+37 verbose pkgid slobber-server
+38 verbose cwd C:\Users\alewis\workspace\slobber_server
+39 error Windows_NT 6.3.9600
+40 error argv "C:\\Program Files\\iojs\\node.exe" "C:\\Program Files\\iojs\\node_modules\\npm\\bin\\npm-cli.js" "publish"
+41 error node v2.4.0
+42 error npm  v2.13.0
+43 error code E403
+44 error "You cannot publish over the previously published version 0.0.9." : slobber-server
+45 error If you need help, you may report this error at:
+45 error     <https://github.com/npm/npm/issues>
+46 verbose exit [ 1, true ]
