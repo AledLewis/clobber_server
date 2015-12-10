@@ -10,7 +10,7 @@ var fs = require('fs');
 var slobberApp = express();
 var router = express.Router();
 
-
+module.exports = function(clobFileLocation){
 
 slobberApp.get('/', function (req, res){
   res.render('index');
@@ -67,9 +67,11 @@ io.on('connection', function(socket){
 
 //TODO work out what to do with this
 var project = rootRequire('app/models/clobProject');
-project.setProject('config.json');
+project.setProject(clobFileLocation);
 rootRequire('app/models/clobWatch').setIO(io);
 //TODO additionally, make this not stupid
 project.changeListeners.push(function(){
-  fs.writeFile('config.json', JSON.stringify(project.projectConfig()), function(){"Saved config"});
+  fs.writeFile(clobFileLocation, JSON.stringify(project.projectConfig()), function(){console.log("Saved config")});
 });
+
+};
