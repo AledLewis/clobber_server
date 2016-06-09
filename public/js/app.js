@@ -65,7 +65,7 @@ $(document).ready(function(){
    
    var bootstrap_class = msg.result==='success'?'success':'danger';
    var d = new Date();
-   
+   console.log(JSON.stringify(msg));
    new_list_item.append(
      $('<div>', {"class":"panel panel-"+bootstrap_class})
      .append( 
@@ -80,7 +80,7 @@ $(document).ready(function(){
          $('<p/>').text(d.toLocaleString())
        )
        .append(
-          msg.err?$('<p>').text(JSON.stringify(msg.err)):"" 
+          msg.result==="failure"?$('<p>').text(msg.stdout+"\n"+msg.stderr):"" 
        )   
      )
    );
