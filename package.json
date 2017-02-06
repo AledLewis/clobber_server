@@ -9,11 +9,11 @@
   },
   "author": "Aled Lewis",
   "license": "MIT",
-  "repository": "https://github.com/AledLewis/slobber_server",
+  "repository": "https://github.com/harshid86/slobber_server",
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.1",
-    "gaze": "^0.5.1",
+    "harshid86/soft-gaze": "^0.5.1",
     "jade": "^1.11.0",
     "node-notifier": "^4.2.3",
     "slobber": "0.4.0",
