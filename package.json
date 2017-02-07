@@ -13,7 +13,7 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.1",
-    "harshid86/soft-gaze": "^0.5.1",
+    "soft-gaze": "github:harshid86/soft-gaze",
     "jade": "^1.11.0",
     "node-notifier": "^4.2.3",
     "slobber": "0.4.0",
