@@ -13,20 +13,20 @@ html
       a Show Settings
       div
         h2 Settings:
-          p
-            strong
-              CodeSource Path:
-            span(id = "codeSourcePath")
-          p
-            strong
-              ScriptRunner Location:
-            span(id="scriptRunnerLocation")
+        p
+          strong
+            CodeSource Path:
+          span(id = "codeSourcePath")
+        p
+          strong
+            ScriptRunner Location:
+          span(id="scriptRunnerLocation")
         h3 Globs:
-          label Add Glob
-          input(type="text" id="globToAdd")
-          button(type="button" id="addGlob" ) Add to globs
-          ul(id="globs")  
-          ul(id="clobs" class="list-unstyled" style="max-height: 50%; overflow: auto;")
+        label Add Glob
+        input(type="text" id="globToAdd")
+        button(type="button" id="addGlob" ) Add to globs
+        ul(id="globs")  
+        ul(id="clobs" class="list-unstyled" style="max-height: 50%; overflow: auto;")
       
       p
         button(id="start" class="btn btn-lg btn-success") Start
