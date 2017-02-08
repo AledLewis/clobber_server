@@ -56,7 +56,7 @@ function addGlobEventHandler(event){
 }
 
 function toggleSettings(){
-  $(div#settingsPanel).toggle();
+  $("div#settingsPanel").toggle();
 }
 
 $(document).ready(function(){
