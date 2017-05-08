@@ -55,7 +55,18 @@ function addGlobEventHandler(event){
     });
 }
 
+function toggleSettings(){
+  $("div#settingsPanel").toggle();
+}
+
 $(document).ready(function(){
+
+  $( "a#settingsVisibility" ).click(function() {
+    toggleSettings();
+  });
+
+  // Hide Settings by default
+  toggleSettings();
 
   var socket = io();
   
@@ -85,11 +96,8 @@ $(document).ready(function(){
      )
    );
 
-   
    $('#clobs').prepend(new_list_item);
 
-
-    
   });
 
   socket.on('status_message', function(msg){
